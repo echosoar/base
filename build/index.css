@@ -1,0 +1,163 @@
+@font-face {
+  font-family: 'logofont';
+  src: url('//at.alicdn.com/t/webfont_nm0fca3l127f1or.eot');
+  /* IE9*/
+  src: url('//at.alicdn.com/t/webfont_nm0fca3l127f1or.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/webfont_nm0fca3l127f1or.woff') format('woff'), /* chrome、firefox */ url('//at.alicdn.com/t/webfont_nm0fca3l127f1or.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/webfont_nm0fca3l127f1or.svg#DFPGBZY7') format('svg');
+  /* iOS 4.1- */
+}
+@font-face {
+  font-family: 'navfont';
+  src: url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.eot');
+  /* IE9*/
+  src: url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.woff') format('woff'), /* chrome、firefox */ url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.svg#DFPGB_Y7') format('svg');
+  /* iOS 4.1- */
+}
+body {
+  margin: 0;
+  position: relative;
+  background-color: #f7f7f7;
+}
+body .main {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  min-width: 1080px;
+}
+body .main .head {
+  position: relative;
+  background: #fff;
+}
+body .main .head .head-container {
+  position: relative;
+  width: 1080px;
+  margin: 0 auto;
+  height: 60px;
+}
+body .main .head .head-container .logo {
+  padding-top: 14px;
+  text-indent: -20px;
+  padding-left: 20px;
+  line-height: 16px;
+  font-size: 20px;
+  font-family: 'logofont';
+}
+body .main .head > nav {
+  position: relative;
+  height: 40px;
+  border-top: 1px solid #eee;
+  margin: 0 auto;
+}
+body .main .head > nav .nav-container {
+  position: relative;
+  width: 1080px;
+  margin: 0 auto;
+}
+body .main .head > nav .nav-container .nav-item {
+  position: relative;
+  display: inline-block;
+  margin-right: 20px;
+  padding: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  line-height: 20px;
+  text-decoration: none;
+  color: rgba(51, 51, 51, 0.6);
+  font-family: 'navfont';
+  user-select: none;
+}
+body .main .head > nav .nav-container .nav-item.nav-active {
+  color: #333;
+}
+body .main .head > nav .nav-container .nav-item.nav-active::before {
+  content: ' ';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: #FFCB05;
+}
+.gitRepos {
+  border-top: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem {
+  position: relative;
+  display: inline-block;
+  border-left: 1px solid #f5f5f5;
+  width: 216px;
+  height: 140px;
+  border-bottom: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  padding: 10px;
+  background: #fff;
+  vertical-align: top;
+  margin: 0;
+}
+.gitRepos .gitReposItem:nth-child(5n) {
+  border-right: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem .gitReposItemTitle {
+  padding: 0px 10px;
+  padding-bottom: 10px;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #0366d6;
+}
+.gitRepos .gitReposItem .gitReposItemDesc {
+  color: #586069;
+  font-size: 12px;
+  line-height: 18px;
+  max-height: 54px;
+  overflow: hidden;
+  word-break: break-all;
+}
+.gitRepos .gitReposItem .gitReposItemLang {
+  position: absolute;
+  color: #586069;
+  bottom: 10px;
+  left: 10px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  padding-left: 15px;
+}
+.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.gitRepos .gitReposItem .gitReposItemStar {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #586069;
+}
+.gitRepos .gitReposItem .gitReposItemStar svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+.gitRepos .gitReposItem .gitReposItemTime {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #586069;
+}
+.home .home-container {
+  position: relative;
+  width: 1080px;
+  margin: 0 auto;
+}
