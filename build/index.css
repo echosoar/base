@@ -161,3 +161,336 @@ body .main .head > nav .nav-container .nav-item.nav-active::before {
   width: 1080px;
   margin: 0 auto;
 }
+.gitRepos {
+  border-top: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem {
+  position: relative;
+  display: inline-block;
+  border-left: 1px solid #f5f5f5;
+  width: 216px;
+  height: 140px;
+  border-bottom: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  padding: 10px;
+  background: #fff;
+  vertical-align: top;
+  margin: 0;
+}
+.gitRepos .gitReposItem:nth-child(5n) {
+  border-right: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem .gitReposItemTitle {
+  padding: 0px 10px;
+  padding-bottom: 10px;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #0366d6;
+}
+.gitRepos .gitReposItem .gitReposItemDesc {
+  color: #586069;
+  font-size: 12px;
+  line-height: 18px;
+  max-height: 54px;
+  overflow: hidden;
+  word-break: break-all;
+}
+.gitRepos .gitReposItem .gitReposItemLang {
+  position: absolute;
+  color: #586069;
+  bottom: 10px;
+  left: 10px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  padding-left: 15px;
+}
+.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.gitRepos .gitReposItem .gitReposItemStar {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #586069;
+}
+.gitRepos .gitReposItem .gitReposItemStar svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+.gitRepos .gitReposItem .gitReposItemTime {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #586069;
+}
+.gitRepos {
+  border-top: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem {
+  position: relative;
+  display: inline-block;
+  border-left: 1px solid #f5f5f5;
+  width: 216px;
+  height: 140px;
+  border-bottom: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  padding: 10px;
+  background: #fff;
+  vertical-align: top;
+  margin: 0;
+}
+.gitRepos .gitReposItem:nth-child(5n) {
+  border-right: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem .gitReposItemTitle {
+  padding: 0px 10px;
+  padding-bottom: 10px;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #0366d6;
+}
+.gitRepos .gitReposItem .gitReposItemTitle svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+.gitRepos .gitReposItem .gitReposItemDesc {
+  color: #586069;
+  font-size: 12px;
+  line-height: 18px;
+  max-height: 54px;
+  overflow: hidden;
+  word-break: break-all;
+}
+.gitRepos .gitReposItem .gitReposItemLang {
+  position: absolute;
+  color: #586069;
+  bottom: 10px;
+  left: 10px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  padding-left: 15px;
+}
+.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.gitRepos .gitReposItem .gitReposItemStar {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #586069;
+}
+.gitRepos .gitReposItem .gitReposItemStar svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+.gitRepos .gitReposItem .gitReposItemTime {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #586069;
+}
+.gitRepos {
+  border-top: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem {
+  position: relative;
+  display: inline-block;
+  border-left: 1px solid #f5f5f5;
+  width: 216px;
+  height: 140px;
+  border-bottom: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  padding: 10px;
+  background: #fff;
+  vertical-align: top;
+  margin: 0;
+}
+.gitRepos .gitReposItem:nth-child(5n) {
+  border-right: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem .gitReposItemTitle {
+  position: relative;
+  padding: 0px 10px;
+  padding-bottom: 10px;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #0366d6;
+}
+.gitRepos .gitReposItem .gitReposItemTitle svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+.gitRepos .gitReposItem .gitReposItemDesc {
+  color: #586069;
+  font-size: 12px;
+  line-height: 18px;
+  max-height: 54px;
+  overflow: hidden;
+  word-break: break-all;
+}
+.gitRepos .gitReposItem .gitReposItemLang {
+  position: absolute;
+  color: #586069;
+  bottom: 10px;
+  left: 10px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  padding-left: 15px;
+}
+.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.gitRepos .gitReposItem .gitReposItemStar {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #586069;
+}
+.gitRepos .gitReposItem .gitReposItemStar svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+.gitRepos .gitReposItem .gitReposItemTime {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #586069;
+}
+.gitRepos {
+  border-top: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem {
+  position: relative;
+  display: inline-block;
+  border-left: 1px solid #f5f5f5;
+  width: 216px;
+  height: 140px;
+  border-bottom: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  padding: 10px;
+  background: #fff;
+  vertical-align: top;
+  margin: 0;
+}
+.gitRepos .gitReposItem:nth-child(5n) {
+  border-right: 1px solid #f5f5f5;
+}
+.gitRepos .gitReposItem .gitReposItemTitle {
+  position: relative;
+  padding: 0px 16px;
+  padding-bottom: 10px;
+  line-height: 20px;
+  font-weight: bold;
+  font-size: 14px;
+  color: #0366d6;
+}
+.gitRepos .gitReposItem .gitReposItemTitle svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+.gitRepos .gitReposItem .gitReposItemDesc {
+  color: #586069;
+  font-size: 12px;
+  line-height: 18px;
+  max-height: 54px;
+  overflow: hidden;
+  word-break: break-all;
+}
+.gitRepos .gitReposItem .gitReposItemLang {
+  position: absolute;
+  color: #586069;
+  bottom: 10px;
+  left: 10px;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  padding-left: 15px;
+}
+.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
+  position: absolute;
+  top: 5px;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.gitRepos .gitReposItem .gitReposItemStar {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  padding-left: 18px;
+  font-size: 12px;
+  color: #586069;
+}
+.gitRepos .gitReposItem .gitReposItemStar svg {
+  position: absolute;
+  top: 2px;
+  left: 0;
+}
+.gitRepos .gitReposItem .gitReposItemTime {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  height: 20px;
+  line-height: 20px;
+  white-space: nowrap;
+  font-size: 12px;
+  color: #586069;
+}

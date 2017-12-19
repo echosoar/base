@@ -2,10 +2,6 @@
 'use strict';
 
 /** Virtual DOM Node */
-/** Global options
- *	@public
- *	@namespace options {Object}
- */
 var options = {
 
 	/** If `true`, `prop` changes trigger synchronous component updates.
@@ -30,13 +26,6 @@ var options = {
 	// beforeUnmount(component) { }
 };
 
-/**
- *  Copy all properties from `props` onto `obj`.
- *  @param {Object} obj		Object onto which properties should be copied.
- *  @param {Object} props	Object from which to copy properties.
- *  @returns obj
- *  @private
- */
 function extend(obj, props) {
   for (var i in props) {
     obj[i] = props[i];
@@ -52,7 +41,12 @@ function extend(obj, props) {
  */
 var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
 
-// DOM properties that should NOT have "px" added when numeric
+/**
+ * Clones the given VNode, optionally adding attributes/props and replacing its children.
+ * @param {VNode} vnode		The virutal DOM element to clone
+ * @param {Object} props	Attributes/props to add when cloning
+ * @param {VNode} rest		Any additional arguments will be used as replacement children.
+ */
 var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
 
 /** Managed queue of dirty components to be re-rendered */
@@ -901,9 +895,10 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
-'use strict';
-// 传入class，在path匹配上的时候使用此class
 
+//# sourceMappingURL=preact.esm.js.map
+
+'use strict';
 var Router = (function (Component$$1) {
   function Router () {
     Component$$1.apply(this, arguments);
@@ -1005,7 +1000,9 @@ var GitRepos = (function (Component$$1) {
     fetch('//api.github.com/users/echosoar/repos?sort=update').then(function (repos) {
      //console.log(repos);
 
-      var newest = repos.splice(0, 5);
+      var newest = repos.splice(0, 5).sort(function (a, b) {
+        return b.stargazers_count - a.stargazers_count;
+      });
       var sortedRepos = repos.sort(function (a, b) {
         return b.stargazers_count - a.stargazers_count;
       }).splice(0, 5);
@@ -1021,23 +1018,27 @@ var GitRepos = (function (Component$$1) {
     var repos = ref.repos;
     return preact.h( 'div', { class: "gitRepos" },
       repos && repos.map(function (repo, index) {
-          console.log(repo);
 
-          var updateTime = new Date(repo.created_at);
+          var updateTime = new Date(repo.pushed_at);
+          console.log(updateTime);
           return preact.h( 'div', { class: "gitReposItem" },
-            preact.h( 'div', { class: "gitReposItemTitle" }, repo.name),
+            preact.h( 'div', { class: "gitReposItemTitle" },
+              preact.h( 'svg', { 'aria-hidden': "true", class: "octicon octicon-grabber", height: "16", version: "1.1", viewBox: "0 0 8 16", width: "8" }, preact.h( 'path', { 'fill-rule': "evenodd", d: "M8 4v1H0V4h8zM0 8h8V7H0v1zm0 3h8v-1H0v1z" })),
+              repo.name
+            ),
             preact.h( 'div', { class: "gitReposItemDesc" }, repo.description),
             repo.language && preact.h( 'div', { class: "gitReposItemLang" },
                 preact.h( 'div', { class: "gitReposItemLangColor", style: {'background-color': LangColor[repo.language.toLowerCase()] || '#000'} }),
                 repo.language
               ),
-            index < 5 && preact.h( 'div', { class: "gitReposItemStar" },
+            repo.stargazers_count > 0 && preact.h( 'div', { class: "gitReposItemStar" },
                 preact.h( 'svg', { 'aria-label': "stars", class: "octicon octicon-star", height: "16", role: "img", version: "1.1", viewBox: "0 0 14 16", width: "14" }, preact.h( 'path', { 'fill-rule': "evenodd", d: "M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z" })),
                 repo.stargazers_count
               ),
-            index >= 5 && preact.h( 'div', { class: "gitReposItemTime" },
-                updateTime.getFullYear() + '/' + (updateTime.getMonth() + 1) + '/' + updateTime.getDate() + ' ' + updateTime.getHours() + ':' + updateTime.getMinutes()
-              )
+            preact.h( 'div', { class: "gitReposItemTime" },
+              updateTime.getFullYear() + '/' + (updateTime.getMonth() + 1) + '/' + updateTime.getDate() + ' ' + updateTime.getHours() + ':' + updateTime.getMinutes()
+            )
+          
           )
         })
     );
