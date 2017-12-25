@@ -142,7 +142,7 @@ class New extends Component {
     if (!id) {
       let time = document.getElementById('new-info-time').value;
       if (time) {
-        postData.time = postData/1000;
+        postData.time = time;
       }
     }
 

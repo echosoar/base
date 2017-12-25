@@ -10,7 +10,7 @@ class List extends Component {
 
     this.state = {
       data: [],
-      page: 1
+      page: window.iamgy.id || 1
     };
 
     this.getLogin();
@@ -46,12 +46,12 @@ class List extends Component {
       <div class="list-main">
         <div class="list-header">
           IAM.GY
-          <a class="list-to-new" href="./pnew/"  target="_blank">New Post</a>
+          <a class="list-to-new" href="//iam.gy/me/pnew/"  target="_blank">New Post</a>
         </div>
         <div>
           {
             data.map(item => {
-              return <a href={"./pnew/" + item.id} target="_blank">
+              return <a href={"//iam.gy/me/pnew/" + item.id} target="_blank">
                 <div class="list-item">
                   <div class="list-title">{ item.title }</div>
                   <div class="list-summary">{ item.summary }</div>

@@ -2,10 +2,6 @@
 'use strict';
 
 /** Virtual DOM Node */
-/** Global options
- *	@public
- *	@namespace options {Object}
- */
 var options = {
 
 	/** If `true`, `prop` changes trigger synchronous component updates.
@@ -30,13 +26,6 @@ var options = {
 	// beforeUnmount(component) { }
 };
 
-/**
- *  Copy all properties from `props` onto `obj`.
- *  @param {Object} obj		Object onto which properties should be copied.
- *  @param {Object} props	Object from which to copy properties.
- *  @returns obj
- *  @private
- */
 function extend(obj, props) {
   for (var i in props) {
     obj[i] = props[i];
@@ -52,7 +41,12 @@ function extend(obj, props) {
  */
 var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
 
-// DOM properties that should NOT have "px" added when numeric
+/**
+ * Clones the given VNode, optionally adding attributes/props and replacing its children.
+ * @param {VNode} vnode		The virutal DOM element to clone
+ * @param {Object} props	Attributes/props to add when cloning
+ * @param {VNode} rest		Any additional arguments will be used as replacement children.
+ */
 var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
 
 /** Managed queue of dirty components to be re-rendered */
@@ -901,9 +895,10 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
-'use strict';
-// 传入class，在path匹配上的时候使用此class
 
+//# sourceMappingURL=preact.esm.js.map
+
+'use strict';
 var Router = (function (Component$$1) {
   function Router () {
     Component$$1.apply(this, arguments);
@@ -1374,7 +1369,7 @@ var IWenKu = (function (Component$$1) {
   IWenKu.prototype.render = function render$$1 () {
     return preact.h( Base, null,
       preact.h( Router, null,
-        preact.h( Home, { path: 'me', pages: 'newpost' })
+        preact.h( Home, { path: 'home' })
       )
     )
   };

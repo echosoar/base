@@ -9,7 +9,7 @@ class IWenKu extends Component {
   render() {
     return <Base>
       <Router>
-        <Home path='me' pages='newpost' />
+        <Home path='home' />
       </Router>
     </Base>
   }

@@ -1465,7 +1465,7 @@ var List = (function (Component$$1) {
 
     this.state = {
       data: [],
-      page: 1
+      page: window.iamgy.id || 1
     };
 
     this.getLogin();
@@ -1509,11 +1509,11 @@ var List = (function (Component$$1) {
     var data = ref.data;
     return preact.h( 'div', { class: "list" },
       preact.h( 'div', { class: "list-main" },
-        preact.h( 'div', { class: "list-header" }, "IAM.GY ", preact.h( 'a', { class: "list-to-new", href: "./pnew/", target: "_blank" }, "New Post")
+        preact.h( 'div', { class: "list-header" }, "IAM.GY ", preact.h( 'a', { class: "list-to-new", href: "//iam.gy/me/pnew/", target: "_blank" }, "New Post")
         ),
         preact.h( 'div', null,
           data.map(function (item) {
-              return preact.h( 'a', { href: "./pnew/" + item.id, target: "_blank" },
+              return preact.h( 'a', { href: "//iam.gy/me/pnew/" + item.id, target: "_blank" },
                 preact.h( 'div', { class: "list-item" },
                   preact.h( 'div', { class: "list-title" }, item.title),
                   preact.h( 'div', { class: "list-summary" }, item.summary),
