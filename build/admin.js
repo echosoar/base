@@ -2,10 +2,6 @@
 'use strict';
 
 /** Virtual DOM Node */
-/** Global options
- *	@public
- *	@namespace options {Object}
- */
 var options = {
 
 	/** If `true`, `prop` changes trigger synchronous component updates.
@@ -30,13 +26,6 @@ var options = {
 	// beforeUnmount(component) { }
 };
 
-/**
- *  Copy all properties from `props` onto `obj`.
- *  @param {Object} obj		Object onto which properties should be copied.
- *  @param {Object} props	Object from which to copy properties.
- *  @returns obj
- *  @private
- */
 function extend(obj, props) {
   for (var i in props) {
     obj[i] = props[i];
@@ -52,7 +41,12 @@ function extend(obj, props) {
  */
 var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
 
-// DOM properties that should NOT have "px" added when numeric
+/**
+ * Clones the given VNode, optionally adding attributes/props and replacing its children.
+ * @param {VNode} vnode		The virutal DOM element to clone
+ * @param {Object} props	Attributes/props to add when cloning
+ * @param {VNode} rest		Any additional arguments will be used as replacement children.
+ */
 var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
 
 /** Managed queue of dirty components to be re-rendered */
@@ -901,9 +895,10 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
-'use strict';
-// 传入class，在path匹配上的时候使用此class
 
+//# sourceMappingURL=preact.esm.js.map
+
+'use strict';
 var Router = (function (Component$$1) {
   function Router () {
     Component$$1.apply(this, arguments);
@@ -940,140 +935,141 @@ var Base = (function (Component$$1) {
 
   Base.prototype.render = function render$$1 () {
     return preact.h( 'div', { class: "main" },
-      preact.h( 'div', null, this.props.children ),
-      preact.h( 'div', { class: "copyright" }, "© 2018 IAM.GY 浙公网安备33010602900497, 浙ICP备171200123号-1")
-      
+      preact.h( 'div', null, this.props.children )
     )
   };
 
   return Base;
 }(Component));
 
-var LangColor = {
-  javascript: 'rgb(241, 224, 90)',
-  php: 'rgb(79, 93, 149)',
-  makefile: 'rgb(66, 120, 25)',
-  css: 'rgb(86, 61, 124)',
-  html: 'rgb(227, 76, 38)'
+var TAGS = {
+	'' : ['<em>','</em>'],
+	_ : ['<strong>','</strong>'],
+	'\n' : ['<br />'],
+	' ' : ['<br />'],
+	'-': ['<hr />']
 };
 
-var fetch = function (url, params) {
-  return window.fetch(url, params).then(function(res) {
-    var contentType = (res.headers.get('content-type') || '').match(/(?:charset=)(.+)/);
-    var charset = '';
-    if (contentType && contentType.length > 1) {
-      charset = contentType[1];
-    }
-    return new Promise(function (resolve, reject) {
-      var reader = new window.FileReader();
-      reader.onload = function(e) {
-        var text = reader.result;
-        resolve(eval('(' + text + ')'));
-      };
-      res.blob().then(function (blog) {
-        reader.readAsText(blog, charset);
-      });
-    });
-  });
-};
+/** Outdent a string based on the first indented line's leading whitespace
+ *	@private
+ */
+function outdent(str) {
+	return str.replace(RegExp('^'+(str.match(/^(\t| )+/) || '')[0], 'gm'), '');
+}
+
+/** Encode special attribute characters to HTML entities in a String.
+ *	@private
+ */
+function encodeAttr(str) {
+	return (str+'').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/** Parse Markdown into an HTML String. */
+function parse(md) {
+	var tokenizer = /((?:^|\n+)(?:\n---+|\* \*(?: \*)+)\n)|(?:^```(\w*)\n([\s\S]*?)\n```$)|((?:(?:^|\n+)(?:\t|  {2,}).+)+\n*)|((?:(?:^|\n)([>*+-]|\d+\.)\s+.*)+)|(?:\!\[([^\]]*?)\]\(([^\)]+?)\))|(\[)|(\](?:\(([^\)]+?)\))?)|(?:(?:^|\n+)([^\s].*)\n(\-{3,}|={3,})(?:\n+|$))|(?:(?:^|\n+)(#{1,3})\s*(.+)(?:\n+|$))|(?:`([^`].*?)`)|(  \n\n*|\n{2,}|__|\*\*|[_*])/gm,
+		context = [],
+		out = '',
+		last = 0,
+		links = {},
+		chunk, prev, token, inner, t;
+
+	function tag(token) {
+		var desc = TAGS[token.replace(/\*/g,'_')[1] || ''],
+			end = context[context.length-1]==token;
+		if (!desc) { return token; }
+		if (!desc[1]) { return desc[0]; }
+		context[end?'pop':'push'](token);
+		return desc[end|0];
+	}
+
+	function flush() {
+		var str = '';
+		while (context.length) { str += tag(context[context.length-1]); }
+		return str;
+	}
+
+	md = md.replace(/^\[(.+?)\]:\s*(.+)$/gm, function (s, name, url) {
+		links[name.toLowerCase()] = url;
+		return '';
+	}).replace(/^\n+|\n+$/g, '');
+
+	while ( (token=tokenizer.exec(md)) ) {
+		prev = md.substring(last, token.index);
+		last = tokenizer.lastIndex;
+		chunk = token[0];
+		if (prev.match(/[^\\](\\\\)*\\$/)) {
+			// escaped
+		}
+		// Code/Indent blocks:
+		else if (token[3] || token[4]) {
+			chunk = '<pre class="code '+(token[4]?'poetry':token[2].toLowerCase())+'">'+outdent(encodeAttr(token[3] || token[4]).replace(/^\n+|\n+$/g, ''))+'</pre>';
+		}
+		// > Quotes, -* lists:
+		else if (token[6]) {
+			t = token[6];
+			if (t.match(/\./)) {
+				token[5] = token[5].replace(/^\d+/gm, '');
+			}
+			inner = parse(outdent(token[5].replace(/^\s*[>*+.-]/gm, '')));
+			if (t==='>') { t = 'blockquote'; }
+			else {
+				t = t.match(/\./) ? 'ol' : 'ul';
+				inner = inner.replace(/^(.*)(\n|$)/gm, '<li>$1</li>');
+			}
+			chunk = '<'+t+'>' + inner + '</'+t+'>';
+		}
+		// Images:
+		else if (token[8]) {
+			chunk = "<img src=\"" + (encodeAttr(token[8])) + "\" alt=\"" + (encodeAttr(token[7])) + "\">";
+		}
+		// Links:
+		else if (token[10]) {
+			out = out.replace('<a>', ("<a href=\"" + (encodeAttr(token[11] || links[prev.toLowerCase()])) + "\">"));
+			chunk = flush() + '</a>';
+		}
+		else if (token[9]) {
+			chunk = '<a>';
+		}
+		// Headings:
+		else if (token[12] || token[14]) {
+			t = 'h' + (token[14] ? token[14].length : (token[13][0]==='='?1:2));
+			chunk = '<'+t+'>' + parse(token[12] || token[15]) + '</'+t+'>';
+		}
+		// `code`:
+		else if (token[16]) {
+			chunk = '<code>'+encodeAttr(token[16])+'</code>';
+		}
+		// Inline formatting: *em*, **strong** & friends
+		else if (token[17] || token[1]) {
+			chunk = tag(token[17] || '--');
+		}
+		out += prev;
+		out += chunk;
+	}
+
+	return (out + md.substring(last) + flush()).trim();
+}
+
+
+//# sourceMappingURL=snarkdown.es.js.map
 
 'use strict';
-var GitRepos = (function (Component$$1) {
-  function GitRepos(props) {
+var TextRender = (function (Component$$1) {
+  function TextRender(props) {
     Component$$1.call(this, props);
 
-    this.state = {
-      repos: [],
-      getDataCount: 0
-    };
-    this.getData();
+    
   }
 
-  if ( Component$$1 ) GitRepos.__proto__ = Component$$1;
-  GitRepos.prototype = Object.create( Component$$1 && Component$$1.prototype );
-  GitRepos.prototype.constructor = GitRepos;
+  if ( Component$$1 ) TextRender.__proto__ = Component$$1;
+  TextRender.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  TextRender.prototype.constructor = TextRender;
 
-  GitRepos.prototype.getData = function getData () {
-    var this$1 = this;
-
-    this.state.getDataCount ++;
-    // 获取前5个最新的和5个star最多的
-    fetch('//api.github.com/users/echosoar/repos?sort=update').then(function (repos) {
-
-      var newest = repos.sort(function (a, b) {
-        return (new Date(b.pushed_at)) - (new Date(a.pushed_at));
-      }).splice(0, 4);
-      var sortedRepos = repos.sort(function (a, b) {
-        return b.stargazers_count - a.stargazers_count;
-      }).splice(0, 4);
-
-      this$1.setState({
-        repos: sortedRepos.concat(newest)
-      });
-    }).catch(function (e) {
-      this$1.state.getDataCount < 5 && this$1.getData();
-    });
-  };
-  
-  GitRepos.prototype.render = function render$$1 () {
-    var ref = this.state;
-    var repos = ref.repos;
-    return preact.h( 'div', { class: "gitRepos" },
-      preact.h( 'div', { class: "gitRepos-title" }, "Open Source Repositories"),
-      repos && repos.map(function (repo, index) {
-
-          var updateTime = new Date(repo.pushed_at);
-
-          return preact.h( 'a', { href: repo.html_url, target: "_blank" },
-            preact.h( 'div', { class: "gitReposItem" },
-              preact.h( 'div', { class: "gitReposItemTitle" },
-                preact.h( 'svg', { 'aria-hidden': "true", class: "octicon octicon-grabber", height: "16", version: "1.1", viewBox: "0 0 8 16", width: "8" }, preact.h( 'path', { 'fill-rule': "evenodd", d: "M8 4v1H0V4h8zM0 8h8V7H0v1zm0 3h8v-1H0v1z" })),
-                repo.name
-              ),
-              preact.h( 'div', { class: "gitReposItemDesc" }, repo.description),
-              repo.language && preact.h( 'div', { class: "gitReposItemLang" },
-                  preact.h( 'div', { class: "gitReposItemLangColor", style: {'background-color': LangColor[repo.language.toLowerCase()] || '#000'} }),
-                  repo.language
-                ),
-              repo.stargazers_count > 0 && preact.h( 'div', { class: "gitReposItemStar" },
-                  preact.h( 'svg', { 'aria-label': "stars", class: "octicon octicon-star", height: "16", role: "img", version: "1.1", viewBox: "0 0 14 16", width: "14" }, preact.h( 'path', { 'fill-rule': "evenodd", d: "M14 6l-4.9-.64L7 1 4.9 5.36 0 6l3.6 3.26L2.67 14 7 11.67 11.33 14l-.93-4.74z" })),
-                  repo.stargazers_count
-                ),
-              preact.h( 'div', { class: "gitReposItemTime" },
-                updateTime.getFullYear() + '/' + (updateTime.getMonth() + 1) + '/' + updateTime.getDate()
-              )
-            
-            )
-          )
-        })
-    );
+  TextRender.prototype.render = function render$$1 () {
+    return preact.h( 'div', { class: "textrender", dangerouslySetInnerHTML: {__html: parse(this.props.data)} });
   };
 
-  return GitRepos;
-}(Component));
-
-'use strict';
-var About = (function (Component$$1) {
-  function About () {
-    Component$$1.apply(this, arguments);
-  }
-
-  if ( Component$$1 ) About.__proto__ = Component$$1;
-  About.prototype = Object.create( Component$$1 && Component$$1.prototype );
-  About.prototype.constructor = About;
-
-  About.prototype.render = function render$$1 () {
-    return preact.h( 'div', { class: "about" },
-      preact.h( 'div', { class: "about-title" }, "About Me"),
-      preact.h( 'div', { class: "about-content" },
-        preact.h( 'div', null, "Hello! My name is GaoYang, and I live in", preact.h( 'i', { class: "icon-hangzhou" }), "HangZhou, China." ),
-        preact.h( 'div', null, "I am a development engineer at", preact.h( 'i', { class: "icon-tmall" }), "Tmall." ),
-        preact.h( 'div', null, "My favorite languages are", preact.h( 'i', { class: "icon-js" }), "Javascript and", preact.h( 'i', { class: "icon-go" }), "Go, but I have broad experience with many languages and technologies." )
-      )
-    );
-  };
-
-  return About;
+  return TextRender;
 }(Component));
 
 var _type = function(obj) {
@@ -1108,257 +1104,431 @@ var formatDate =  function(date, fmt) {
   return fmt;
 };
 
-'use strict';
-var SortBy = [
-  {
-    name: 'Time',
-    value: 'time'
-  },
-  {
-    name: 'Word',
-    value: 'word'
-  },
-  {
-    name: 'Read',
-    value: 'read'
-  }
-];
+var F10To64 = function (number) {
+  var chars = '0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIGKLMNOPQRSTUVWXYZ'.split(''),
+      radix = chars.length,
+      qutient = +number,
+      arr = [],
+      mod = 0;
+  
+  do {
+      mod = qutient % radix;
+      qutient = (qutient - mod) / radix;
+      arr.unshift(chars[mod]);
+  } while (qutient);
+  return arr.join('');
+};
 
-var Blog = (function (Component$$1) {
-  function Blog(props) {
-    this.state = {
-      nowType: null
-    };
-
-    this.handleChangeType(SortBy[0].value);
-  }
-
-  if ( Component$$1 ) Blog.__proto__ = Component$$1;
-  Blog.prototype = Object.create( Component$$1 && Component$$1.prototype );
-  Blog.prototype.constructor = Blog;
-
-  Blog.prototype.handleChangeType = function handleChangeType (type) {
-    var this$1 = this;
-
-    var ref = this.state;
-    var nowType = ref.nowType;
-    if (type == nowType) { return; }
-
-    if (this.state[type]) {
-      this.setState({
-        nowType: type
+var fetch = function (url, params) {
+  return window.fetch(url, params).then(function(res) {
+    var contentType = (res.headers.get('content-type') || '').match(/(?:charset=)(.+)/);
+    var charset = '';
+    if (contentType && contentType.length > 1) {
+      charset = contentType[1];
+    }
+    return new Promise(function (resolve, reject) {
+      var reader = new window.FileReader();
+      reader.onload = function(e) {
+        var text = reader.result;
+        resolve(eval('(' + text + ')'));
+      };
+      res.blob().then(function (blog) {
+        reader.readAsText(blog, charset);
       });
-    } else {
-      this.setState({
-        nowType: type
-      });
-      setTimeout(function () {
-        this$1.loadData(type);
-      }, 0);
+    });
+  });
+};
+
+var Post = function (url, data) {
+
+  var params = Object.keys(data).map(function(key) {
+    return ((encodeURIComponent(key)) + "=" + (encodeURIComponent(data[key])));
+  }).join('&');
+  var config = {
+    method: 'POST',
+    body: params,
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
+  return fetch(url, config);
+};
 
-  Blog.prototype.loadData = function loadData (type) {
-    var this$1 = this;
+'use strict';
+var TextEdit = (function (Component$$1) {
+  function TextEdit(props) {
+    Component$$1.call(this, props);
+  }
 
-    setTimeout(function (){
-      this$1.setState(( obj = {}, obj[type] = [
-          {
-            title: '10 Things I Hate About Social Issues Journalism',
-            img: "//cdn-images-1.medium.com/max/2000/1*NyQPW2AYiu84R8rjiJBLVw.jpeg",
-            summary: "",
-            time: 1512013860020,
-            tags: ['Test', 'TagsA'],
-            link: 'sadsafasffa'
-          },
-          {
-            title: 'White people, we’re tired of trying to convince you of our humanity',
-            summary: "Yesterday a group of WOC and I spent several hours online working with a white woman who couldn’t understand her comments that minimized racism and discounted the struggles of black women were harmful. An ally I work with spent several more hours working with her one-on-one. The result? She barely budged in her way of thinking.",
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: 'Alphabet’s Schmidt Hands Reins to Google Founders, Leaders',
-            summary: "Google parent Alphabet Inc. no longer needs Eric Schmidt’s adult supervision.After 17 years in senior management, Schmidt is relinquishing his executive chairman role. He was recruited from Novell Inc. when Google had just 200 employees; now it’s a dominant global force in search, online advertising and…",
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },{
-            title: 'Prove everyone wrong',
-            summary: "",
-            img: '//cdn-images-1.medium.com/max/1600/1*xk9ZcxhJvELFfc50da722w.jpeg',
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: 'White people, we’re tired of trying to convince you of our humanity',
-            summary: "Yesterday a group of WOC and I spent several hours online working with a white woman who couldn’t understand her comments that minimized racism and discounted the struggles of black women were harmful. An ally I work with spent several more hours working with her one-on-one. The result? She barely budged in her way of thinking.",
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: 'A Cute Toy Just Brought a Hacker Into Your Home',
-            summary: "Amid the holiday shopping season, cybersecurity researchers warn that new, interactive toys are vulnerable to many hacking threats.",
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: '2017读了上百本书，唯独这7本彻底改变了我',
-            time: 1514013860020,
-            img: '//upload-images.jianshu.io/upload_images/2206395-5025633bfebeecec.jpeg?imageMogr2/auto-orient/',
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: '《红楼梦》与民国名著',
-            time: 1514013860020,
-            img: '//upload-images.jianshu.io/upload_images/5513287-60d6a2939be94bb0.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/700',
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: 'Why ‘The Dark Is Rising’ Is the Book We Need Right Now',
-            time: 1514013860020,
-            img: '//cdn-images-1.medium.com/max/2000/1*ocdu-Vzzw9C5UDaKrx1o7Q.jpeg',
-            tags: ['Test', 'TagsB']
-          }], obj));
-      var obj;
-    }, 1000);
+  if ( Component$$1 ) TextEdit.__proto__ = Component$$1;
+  TextEdit.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  TextEdit.prototype.constructor = TextEdit;
+
+
+  TextEdit.prototype.handleCancel = function handleCancel () {
+    this.props.onChange(false);
   };
 
-  Blog.prototype.render = function render$$1 () {
-    var this$1 = this;
+  TextEdit.prototype.handleSave = function handleSave () {
+    var value = document.getElementById('text-edit-textarea').value;
+    this.props.onChange(true, value);
+  };
 
-    var ref = this.state;
-    var nowType = ref.nowType;
-    return preact.h( 'div', { class: "blog" },
-      preact.h( 'div', { class: "blog-title" }, "Posts ", preact.h( 'div', { class: "blog-sort" }, "Sort by ", SortBy.map(function (by) {
-              var className = '';
-              if (nowType == by.value) { className = 'blog-type-active'; }
-              return preact.h( 'span', { class: className, onClick: this$1.handleChangeType.bind(this$1, by.value) }, by.name);
-            })
-        )
-      ),
-      preact.h( 'div', { class: "blog-main" },
-        this.state[nowType] && this.state[nowType].map(function (post) {
-
-            var className = 'blog-item';
-            var style = {};
-
-            if (post.img) {
-              className += ' blog-item-haveImg';
-              style['background-image'] = "url(" + (post.img) + ")";
-            }
-
-            return preact.h( 'div', { class: className, style: style },
-              preact.h( 'a', { href: '//iam.gy/post/' + post.link, target: "_blank" },
-                preact.h( 'div', { class: "blog-item-title" }, post.title),
-                !post.img && preact.h( 'div', { class: "blog-summary" },
-                    post.summary
-                  ),
-                post.tags && preact.h( 'div', { class: "blog-tags" }, "#", post.tags.slice(0, 2).join(' #')),
-                preact.h( 'div', { class: "blog-item-time" }, formatDate(post.time, 'yy/MM/dd'))
-              )
-            );
-          }),
-        this.state[nowType] && preact.h( 'div', { class: "blog-item" },
-            preact.h( 'div', { class: "blog-mylikesentence" }, "Live well", preact.h( 'br', null ), "Love lots", preact.h( 'br', null ), "And laugh often"),
-            preact.h( 'a', { href: "//iam.gy/posts/", class: "blog-toblog", target: "_blank" }, "View All Posts")
-          ),
-        !this.state[nowType] && preact.h( 'div', null, "Loading" )
-      )
-      
+  TextEdit.prototype.render = function render$$1 () {
+    console.log(this.props.data);
+    return preact.h( 'div', { class: "text-edit" },
+      preact.h( 'textarea', { id: "text-edit-textarea", value: this.props.data }),
+      preact.h( 'div', { class: "text-cancel", onClick: this.handleCancel.bind(this) }, "Cancel"),
+      preact.h( 'div', { class: "text-save", onClick: this.handleSave.bind(this) }, "Save")
     );
   };
 
-  return Blog;
+  return TextEdit;
 }(Component));
 
 'use strict';
-var iam = [
-  'Developer',
-  'Programmer',
-  'Coder',
-  'Innovator',
-  'Traveler',
-  'Creator',
-  'Jser',
-  'Gopher',
-  'Geek'
-];
-
-var Er = (function (Component$$1) {
-  function Er(props) {
+var New = (function (Component$$1) {
+  function New(props) {
     Component$$1.call(this, props);
 
     this.state = {
-      nowIndex: 0
+      data: [],
+      updateTime: Date.now(),
+      isOpenEdit: false,
+      nowEditIndex: null,
+      link: this.ramdomLink()
     };
 
-    this.changeIndex();
+    this.getData();
   }
 
-  if ( Component$$1 ) Er.__proto__ = Component$$1;
-  Er.prototype = Object.create( Component$$1 && Component$$1.prototype );
-  Er.prototype.constructor = Er;
+  if ( Component$$1 ) New.__proto__ = Component$$1;
+  New.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  New.prototype.constructor = New;
 
-  Er.prototype.changeIndex = function changeIndex () {
-    var nowIndex = this.state.nowIndex;
-    nowIndex ++;
-    if (nowIndex >= iam.length) { nowIndex = 0; }
-    this.setState({
-      nowIndex: nowIndex
-    });
-    setTimeout(this.changeIndex.bind(this), 1200);
+
+  New.prototype.ramdomLink = function ramdomLink () {
+    return F10To64(Math.floor(Date.now()));
   };
-  
-  Er.prototype.render = function render$$1 () {
+
+  New.prototype.handleAdd = function handleAdd (type, index) {
     var ref = this.state;
-    var nowIndex = ref.nowIndex;
-    return preact.h( 'div', { class: "er" },
-      iam.map(function (item, index) {
-          var className = 'eritem';
-          if (index == nowIndex) {
-            className += ' erItemActive';
-          }
-          return preact.h( 'div', { class: className }, item);
-        })
+    var data = ref.data;
+    data.splice(index, 0, {
+      type: type,
+      data: ''
+    });
+    this.setState({
+      updateTime: Date.now()
+    });
+  };
+
+  New.prototype.handleDel = function handleDel (index) {
+    var ref = this.state;
+    var data = ref.data;
+
+    if (!window.confirm('确认要删除吗？')) { return; }
+    data.splice(index, 1);
+    this.setState({
+      updateTime: Date.now()
+    });
+  };
+
+  New.prototype.handleEdit = function handleEdit (index) {
+    this.setState({
+      isOpenEdit: true,
+      nowEditIndex: index
+    });
+  };
+
+  New.prototype.render_doing = function render_doing (index) {
+    return preact.h( 'div', { class: "doing" },
+      preact.h( 'i', { class: "text", onClick: this.handleAdd.bind(this, 'text', index) }),
+      preact.h( 'i', { class: "image", onClick: this.handleAdd.bind(this, 'image', index) }),
+      preact.h( 'i', { class: "code", onClick: this.handleAdd.bind(this, 'code', index) })
     );
   };
 
-  return Er;
+  New.prototype.render_type = function render_type (item) {
+    switch(item.type) {
+      case 'text':
+        return preact.h( TextRender, { data: item.data });
+    }
+  };
+
+  New.prototype.renderItem = function renderItem (item, index) {
+    return preact.h( 'div', { class: "item", 'data-title': item.type },
+      preact.h( 'div', { class: "item-edit", onClick: this.handleEdit.bind(this, index) }),
+      preact.h( 'div', { class: "item-close", onClick: this.handleDel.bind(this, index) }),
+      this.render_type(item),
+      this.render_doing(index + 1)
+    );
+  };
+
+  New.prototype.renderEdit = function renderEdit () {
+    var this$1 = this;
+
+    var ref = this.state;
+    var nowEditIndex = ref.nowEditIndex;
+    var data = ref.data;
+    if (nowEditIndex == null) { return; }
+    var dataItem = data[nowEditIndex];
+
+    console.log(dataItem);
+
+    switch(dataItem.type) {
+      case 'text':
+        return preact.h( TextEdit, { data: dataItem.data, onChange: this.editChange.bind(this, nowEditIndex) });
+      default:
+        setTimeout(function (){
+          this$1.setState({
+            isOpenEdit: false
+          });
+        }, 200);
+    }
+  };
+
+  New.prototype.editChange = function editChange (index, isChange, data) {
+    if (!isChange) {
+      this.setState({
+        isOpenEdit: false
+      });
+    } else {
+      this.state.data[index].data = data;
+      this.setState({
+        isOpenEdit: false,
+        updateTime: Date.now()
+      });
+    }
+  };
+
+  New.prototype.handleSend = function handleSend (status) {
+    var ref = this.state;
+    var data = ref.data;
+    var title = document.getElementById('new-info-title').value;
+    var tags = document.getElementById('new-info-tags').value;
+    var summary = document.getElementById('new-info-summary').value;
+    var link = document.getElementById('new-info-link').value;
+    var id = window.iamgy.id || 0;
+
+    
+
+    var postData = {
+      title: title,
+      tags: tags,
+      summary: summary,
+      link: link,
+      status: status,
+      data: JSON.stringify(data),
+      id: id
+    };
+
+    if (!id) {
+      var time = document.getElementById('new-info-time').value;
+      if (time) {
+        postData.time = postData/1000;
+      }
+    }
+
+    Post('https://iam.gy/me/new', postData).then(function (res) {
+      if (!res.success) {
+        window.open('../plogin');
+      } else {
+        location.href = '../plist';
+      }
+    });
+  };
+
+  New.prototype.getData = function getData () {
+    var this$1 = this;
+
+    if (!window.iamgy.id) { return; }
+
+    
+
+    fetch('//iam.gy/api/post/' + window.iamgy.id + '/?admin=1', {
+      credentials: 'include'
+    }).then(function (res) {
+      console.log(res);
+
+      if (!res.success) { return; }
+
+      var data = [];
+
+      try {
+        data = JSON.parse(res.data.content);
+        document.getElementById('new-info-title').value = res.data.title;
+        document.getElementById('new-info-tags').value = res.data.tags;
+        document.getElementById('new-info-summary').value = res.data.summary;
+        document.getElementById('new-info-link').value = res.data.link;
+        document.getElementById('now-info-createTime').value = formatDate((new Date(res.data.createTime * 1000)) - 0, 'yy/MM/dd hh:mm:ss');
+      } catch(e) {}
+
+      this$1.setState({
+        data: data 
+      });
+    });
+  };
+  
+  New.prototype.render = function render$$1 () {
+    var this$1 = this;
+
+    var ref = this.state;
+    var data = ref.data;
+    var isOpenEdit = ref.isOpenEdit;
+    var link = ref.link;
+    var flClass = 'new-fl';
+    if (isOpenEdit) { flClass += ' active'; }
+
+    return preact.h( 'div', { class: "new" },
+      preact.h( 'div', { class: flClass },
+      isOpenEdit && this.renderEdit()
+      ),
+      preact.h( 'div', { class: "new-editor" },
+        preact.h( 'div', { class: "editor-label", 'data-label': "Title" },
+          preact.h( 'input', { type: "text", id: "new-info-title" })
+        ),
+        preact.h( 'div', { class: "editor-label", 'data-label': "Tags" },
+          preact.h( 'input', { type: "text", id: "new-info-tags" })
+        ),
+        preact.h( 'div', { class: "editor-label", 'data-label': "Summary" },
+          preact.h( 'input', { type: "text", id: "new-info-summary" })
+        ),
+        preact.h( 'div', { class: "editor-label", 'data-label': "Link" },
+          preact.h( 'input', { type: "text", id: "new-info-link", value: link })
+        ),
+        preact.h( 'div', { class: "editor-label", 'data-label': "CreateTime" },
+          preact.h( 'input', { type: "text", id: "now-info-createTime", disabled: true }),
+          preact.h( 'input', { type: "text", id: "new-info-time" })
+        ),
+        this.render_doing(0),
+        data.map(function (item, index) {
+            return this$1.renderItem(item, index);
+          }),
+        preact.h( 'div', { class: "new-editor-button" },
+          preact.h( 'div', { class: "new-editor-btn save", onClick: this.handleSend.bind(this, 1) }, "Save"),
+          preact.h( 'div', { class: "new-editor-btn pub", onClick: this.handleSend.bind(this, 2) }, "Publish")
+
+        )
+      )
+      
+    )
+  };
+
+  return New;
 }(Component));
 
 'use strict';
-var Home = (function (Component$$1) {
-  function Home () {
+var Login = (function (Component$$1) {
+  function Login () {
     Component$$1.apply(this, arguments);
   }
 
-  if ( Component$$1 ) Home.__proto__ = Component$$1;
-  Home.prototype = Object.create( Component$$1 && Component$$1.prototype );
-  Home.prototype.constructor = Home;
+  if ( Component$$1 ) Login.__proto__ = Component$$1;
+  Login.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  Login.prototype.constructor = Login;
 
-  Home.prototype.render = function render$$1 () {
-    return preact.h( 'div', { class: "home" },
-      preact.h( 'div', { class: "home-container" },
-        preact.h( 'div', { class: "home-logo" }),
-        preact.h( 'div', { class: "home-text" }, "I AM GaoYang, I AM ", preact.h( 'span', { class: "home-iam" },
-            preact.h( Er, null )
-          ), " !")
-      ),
-      preact.h( 'div', { class: "container" },
-        preact.h( 'div', { class: "git-container" },
-          preact.h( GitRepos, null )
+  Login.prototype.handleSend = function handleSend () {
+    var account = document.getElementById('login-account').value;
+    var password = document.getElementById('login-password').value;
+
+
+
+    Post('https://iam.gy/me/login', {
+      account: account,
+      password: password
+    }).then(function (res) {
+      if (res.success) {
+        window.close();
+      }
+    });
+  };
+
+  
+  Login.prototype.render = function render$$1 () {
+    
+    return preact.h( 'div', { class: "login" },
+      preact.h( 'input', { id: "login-account", placeholder: "Account" }),
+      preact.h( 'input', { type: "password", id: "login-password", placeholder: "Password" }),
+      preact.h( 'div', { class: "login-btn", onClick: this.handleSend.bind(this) }, "Login")
+    )
+  };
+
+  return Login;
+}(Component));
+
+'use strict';
+var List = (function (Component$$1) {
+  function List(props) {
+    Component$$1.call(this, props);
+
+    this.state = {
+      data: [],
+      page: 1
+    };
+
+    this.getLogin();
+  }
+
+  if ( Component$$1 ) List.__proto__ = Component$$1;
+  List.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  List.prototype.constructor = List;
+
+  List.prototype.getLogin = function getLogin () {
+    var this$1 = this;
+
+    return fetch('//iam.gy/me/logined', {
+      credentials: 'include'
+    }).then(function (res) {
+      if (!res.success) {
+        window.open('./plogin');
+      } else {
+        this$1.fetchData();
+      }
+    });
+  };
+
+  List.prototype.fetchData = function fetchData () {
+    var this$1 = this;
+
+    var ref = this.state;
+    var page = ref.page;
+    fetch('//iam.gy/api/list/' + page + '/?noContent=true&admin=1', {
+      credentials: 'include'
+    }).then(function (res) {
+      this$1.setState({
+        data: res.data
+      });
+    });
+  };
+
+  
+  List.prototype.render = function render$$1 () {
+    var ref = this.state;
+    var data = ref.data;
+    return preact.h( 'div', { class: "list" },
+      preact.h( 'div', { class: "list-main" },
+        preact.h( 'div', { class: "list-header" }, "IAM.GY ", preact.h( 'a', { class: "list-to-new", href: "./pnew/", target: "_blank" }, "New Post")
         ),
-        preact.h( 'div', { class: "about-container" },
-          preact.h( About, null )
-        ),
-        preact.h( 'div', { class: "blog-container" },
-          preact.h( Blog, null )
+        preact.h( 'div', null,
+          data.map(function (item) {
+              return preact.h( 'a', { href: "./pnew/" + item.id, target: "_blank" },
+                preact.h( 'div', { class: "list-item" },
+                  preact.h( 'div', { class: "list-title" }, item.title),
+                  preact.h( 'div', { class: "list-summary" }, item.summary),
+                  preact.h( 'div', { class: "list-info" },
+                    item.status == 1 ? '[草稿]' : '[已发布]', " | 添加时间: ", formatDate((new Date(item.createTime * 1000)) - 0, 'yy/MM/dd hh:mm:ss'), " | 最后修改时间: ", formatDate((new Date(item.changeTime * 1000)) - 0, 'yy/MM/dd hh:mm:ss'), " | 标签: ", item.tags
+                  )
+                )
+              );
+            })
         )
       )
     );
   };
 
-  return Home;
+  return List;
 }(Component));
 
 'use strict';
@@ -1374,7 +1544,9 @@ var IWenKu = (function (Component$$1) {
   IWenKu.prototype.render = function render$$1 () {
     return preact.h( Base, null,
       preact.h( Router, null,
-        preact.h( Home, { path: 'me', pages: 'newpost' })
+        preact.h( New, { path: 'me', page: 'pnew' }),
+        preact.h( Login, { path: 'me', page: 'plogin' }),
+        preact.h( List, { path: 'me', page: 'plist' })
       )
     )
   };
@@ -1386,4 +1558,4 @@ var IWenKu = (function (Component$$1) {
 render(preact.h( IWenKu, null ), document.getElementById('container'));
 
 }());
-//# sourceMappingURL=index.js.map
+//# sourceMappingURL=admin.js.map

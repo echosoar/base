@@ -12,10 +12,41 @@
   src: url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.woff') format('woff'), /* chrome、firefox */ url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/webfont_k6r99ld3j0g22o6r.svg#DFPGB_Y7') format('svg');
   /* iOS 4.1- */
 }
+@font-face {
+  font-family: 'hidTextfont';
+  src: url('//at.alicdn.com/t/webfont_naud9r0jhlac3di.eot');
+  /* IE9*/
+  src: url('//at.alicdn.com/t/webfont_naud9r0jhlac3di.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */ url('//at.alicdn.com/t/webfont_naud9r0jhlac3di.woff') format('woff'), /* chrome、firefox */ url('//at.alicdn.com/t/webfont_naud9r0jhlac3di.ttf') format('truetype'), /* chrome、firefox、opera、Safari, Android, iOS 4.2+*/ url('//at.alicdn.com/t/webfont_naud9r0jhlac3di.svg#FZZDHJW--GB1-0') format('svg');
+  /* iOS 4.1- */
+}
 body {
   margin: 0;
   position: relative;
-  background-color: #f7f7f7;
+  background-color: #fff;
+}
+body a {
+  text-decoration: none;
+}
+body .topHid {
+  display: block;
+  position: fixed;
+  width: 100%;
+  z-index: 10000;
+  height: 30px;
+  background-color: #FF0036;
+  opacity: .95;
+  top: -30px;
+  transition: top 0.3s ease-out;
+}
+body .topHid .topHidText {
+  position: relative;
+  width: 1080px;
+  margin: 0 auto;
+  line-height: 30px;
+  font-size: 12px;
+  font-weight: bold;
+  color: #fff;
+  font-family: hidTextfont;
 }
 body .main {
   position: relative;
@@ -23,410 +54,38 @@ body .main {
   margin: 0 auto;
   min-width: 1080px;
 }
-body .main .head {
-  position: relative;
+body .main .copyright {
+  line-height: 60px;
+  text-align: center;
+  font-size: 12px;
+}
+.gitRepos {
   background: #fff;
 }
-body .main .head .head-container {
-  position: relative;
-  width: 1080px;
-  margin: 0 auto;
-  height: 60px;
+.gitRepos > a:nth-child(4n + 1) .gitReposItem {
+  border-right: 1px solid #f5f5f5;
 }
-body .main .head .head-container .logo {
-  padding-top: 14px;
-  text-indent: -20px;
-  padding-left: 20px;
-  line-height: 16px;
-  font-size: 20px;
-  font-family: 'logofont';
-}
-body .main .head > nav {
-  position: relative;
-  height: 40px;
-  border-top: 1px solid #eee;
-  margin: 0 auto;
-}
-body .main .head > nav .nav-container {
-  position: relative;
-  width: 1080px;
-  margin: 0 auto;
-}
-body .main .head > nav .nav-container .nav-item {
-  position: relative;
-  display: inline-block;
-  margin-right: 20px;
-  padding: 10px;
-  font-size: 16px;
+.gitRepos .gitRepos-title {
+  height: 48px;
+  line-height: 48px;
+  padding: 0 10px;
+  font-size: 14px;
   font-weight: bold;
-  line-height: 20px;
-  text-decoration: none;
-  color: rgba(51, 51, 51, 0.6);
-  font-family: 'navfont';
-  user-select: none;
-}
-body .main .head > nav .nav-container .nav-item.nav-active {
   color: #333;
-}
-body .main .head > nav .nav-container .nav-item.nav-active::before {
-  content: ' ';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 4px;
-  background: #FFCB05;
-}
-.gitRepos {
-  border-top: 1px solid #f5f5f5;
+  border-bottom: 1px solid #f5f5f5;
 }
 .gitRepos .gitReposItem {
   position: relative;
   display: inline-block;
   border-left: 1px solid #f5f5f5;
   width: 216px;
-  height: 140px;
+  height: 122px;
   border-bottom: 1px solid #f5f5f5;
   box-sizing: border-box;
   padding: 10px;
-  background: #fff;
   vertical-align: top;
   margin: 0;
-}
-.gitRepos .gitReposItem:nth-child(5n) {
-  border-right: 1px solid #f5f5f5;
-}
-.gitRepos .gitReposItem .gitReposItemTitle {
-  padding: 0px 10px;
-  padding-bottom: 10px;
-  line-height: 20px;
-  font-weight: bold;
-  font-size: 14px;
-  color: #0366d6;
-}
-.gitRepos .gitReposItem .gitReposItemDesc {
-  color: #586069;
-  font-size: 12px;
-  line-height: 18px;
-  max-height: 54px;
-  overflow: hidden;
-  word-break: break-all;
-}
-.gitRepos .gitReposItem .gitReposItemLang {
-  position: absolute;
-  color: #586069;
-  bottom: 10px;
-  left: 10px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 12px;
-  padding-left: 15px;
-}
-.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
-  position: absolute;
-  top: 5px;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.gitRepos .gitReposItem .gitReposItemStar {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  height: 20px;
-  line-height: 20px;
-  white-space: nowrap;
-  padding-left: 18px;
-  font-size: 12px;
-  color: #586069;
-}
-.gitRepos .gitReposItem .gitReposItemStar svg {
-  position: absolute;
-  top: 2px;
-  left: 0;
-}
-.gitRepos .gitReposItem .gitReposItemTime {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  height: 20px;
-  line-height: 20px;
-  white-space: nowrap;
-  font-size: 12px;
-  color: #586069;
-}
-.home .home-container {
-  position: relative;
-  width: 1080px;
-  margin: 0 auto;
-}
-.gitRepos {
-  border-top: 1px solid #f5f5f5;
-}
-.gitRepos .gitReposItem {
-  position: relative;
-  display: inline-block;
-  border-left: 1px solid #f5f5f5;
-  width: 216px;
-  height: 140px;
-  border-bottom: 1px solid #f5f5f5;
-  box-sizing: border-box;
-  padding: 10px;
-  background: #fff;
-  vertical-align: top;
-  margin: 0;
-}
-.gitRepos .gitReposItem:nth-child(5n) {
-  border-right: 1px solid #f5f5f5;
-}
-.gitRepos .gitReposItem .gitReposItemTitle {
-  padding: 0px 10px;
-  padding-bottom: 10px;
-  line-height: 20px;
-  font-weight: bold;
-  font-size: 14px;
-  color: #0366d6;
-}
-.gitRepos .gitReposItem .gitReposItemDesc {
-  color: #586069;
-  font-size: 12px;
-  line-height: 18px;
-  max-height: 54px;
-  overflow: hidden;
-  word-break: break-all;
-}
-.gitRepos .gitReposItem .gitReposItemLang {
-  position: absolute;
-  color: #586069;
-  bottom: 10px;
-  left: 10px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 12px;
-  padding-left: 15px;
-}
-.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
-  position: absolute;
-  top: 5px;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.gitRepos .gitReposItem .gitReposItemStar {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  height: 20px;
-  line-height: 20px;
-  white-space: nowrap;
-  padding-left: 18px;
-  font-size: 12px;
-  color: #586069;
-}
-.gitRepos .gitReposItem .gitReposItemStar svg {
-  position: absolute;
-  top: 2px;
-  left: 0;
-}
-.gitRepos .gitReposItem .gitReposItemTime {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  height: 20px;
-  line-height: 20px;
-  white-space: nowrap;
-  font-size: 12px;
-  color: #586069;
-}
-.gitRepos {
-  border-top: 1px solid #f5f5f5;
-}
-.gitRepos .gitReposItem {
-  position: relative;
-  display: inline-block;
-  border-left: 1px solid #f5f5f5;
-  width: 216px;
-  height: 140px;
-  border-bottom: 1px solid #f5f5f5;
-  box-sizing: border-box;
-  padding: 10px;
-  background: #fff;
-  vertical-align: top;
-  margin: 0;
-}
-.gitRepos .gitReposItem:nth-child(5n) {
-  border-right: 1px solid #f5f5f5;
-}
-.gitRepos .gitReposItem .gitReposItemTitle {
-  padding: 0px 10px;
-  padding-bottom: 10px;
-  line-height: 20px;
-  font-weight: bold;
-  font-size: 14px;
-  color: #0366d6;
-}
-.gitRepos .gitReposItem .gitReposItemTitle svg {
-  position: absolute;
-  top: 2px;
-  left: 0;
-}
-.gitRepos .gitReposItem .gitReposItemDesc {
-  color: #586069;
-  font-size: 12px;
-  line-height: 18px;
-  max-height: 54px;
-  overflow: hidden;
-  word-break: break-all;
-}
-.gitRepos .gitReposItem .gitReposItemLang {
-  position: absolute;
-  color: #586069;
-  bottom: 10px;
-  left: 10px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 12px;
-  padding-left: 15px;
-}
-.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
-  position: absolute;
-  top: 5px;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.gitRepos .gitReposItem .gitReposItemStar {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  height: 20px;
-  line-height: 20px;
-  white-space: nowrap;
-  padding-left: 18px;
-  font-size: 12px;
-  color: #586069;
-}
-.gitRepos .gitReposItem .gitReposItemStar svg {
-  position: absolute;
-  top: 2px;
-  left: 0;
-}
-.gitRepos .gitReposItem .gitReposItemTime {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  height: 20px;
-  line-height: 20px;
-  white-space: nowrap;
-  font-size: 12px;
-  color: #586069;
-}
-.gitRepos {
-  border-top: 1px solid #f5f5f5;
-}
-.gitRepos .gitReposItem {
-  position: relative;
-  display: inline-block;
-  border-left: 1px solid #f5f5f5;
-  width: 216px;
-  height: 140px;
-  border-bottom: 1px solid #f5f5f5;
-  box-sizing: border-box;
-  padding: 10px;
-  background: #fff;
-  vertical-align: top;
-  margin: 0;
-}
-.gitRepos .gitReposItem:nth-child(5n) {
-  border-right: 1px solid #f5f5f5;
-}
-.gitRepos .gitReposItem .gitReposItemTitle {
-  position: relative;
-  padding: 0px 10px;
-  padding-bottom: 10px;
-  line-height: 20px;
-  font-weight: bold;
-  font-size: 14px;
-  color: #0366d6;
-}
-.gitRepos .gitReposItem .gitReposItemTitle svg {
-  position: absolute;
-  top: 2px;
-  left: 0;
-}
-.gitRepos .gitReposItem .gitReposItemDesc {
-  color: #586069;
-  font-size: 12px;
-  line-height: 18px;
-  max-height: 54px;
-  overflow: hidden;
-  word-break: break-all;
-}
-.gitRepos .gitReposItem .gitReposItemLang {
-  position: absolute;
-  color: #586069;
-  bottom: 10px;
-  left: 10px;
-  height: 20px;
-  line-height: 20px;
-  font-size: 12px;
-  padding-left: 15px;
-}
-.gitRepos .gitReposItem .gitReposItemLang .gitReposItemLangColor {
-  position: absolute;
-  top: 5px;
-  left: 0;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.gitRepos .gitReposItem .gitReposItemStar {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  height: 20px;
-  line-height: 20px;
-  white-space: nowrap;
-  padding-left: 18px;
-  font-size: 12px;
-  color: #586069;
-}
-.gitRepos .gitReposItem .gitReposItemStar svg {
-  position: absolute;
-  top: 2px;
-  left: 0;
-}
-.gitRepos .gitReposItem .gitReposItemTime {
-  position: absolute;
-  right: 10px;
-  bottom: 10px;
-  height: 20px;
-  line-height: 20px;
-  white-space: nowrap;
-  font-size: 12px;
-  color: #586069;
-}
-.gitRepos {
-  border-top: 1px solid #f5f5f5;
-}
-.gitRepos .gitReposItem {
-  position: relative;
-  display: inline-block;
-  border-left: 1px solid #f5f5f5;
-  width: 216px;
-  height: 140px;
-  border-bottom: 1px solid #f5f5f5;
-  box-sizing: border-box;
-  padding: 10px;
-  background: #fff;
-  vertical-align: top;
-  margin: 0;
-}
-.gitRepos .gitReposItem:nth-child(5n) {
-  border-right: 1px solid #f5f5f5;
+  transition: background .3s ease;
 }
 .gitRepos .gitReposItem .gitReposItemTitle {
   position: relative;
@@ -439,14 +98,14 @@ body .main .head > nav .nav-container .nav-item.nav-active::before {
 }
 .gitRepos .gitReposItem .gitReposItemTitle svg {
   position: absolute;
-  top: 2px;
+  top: 3px;
   left: 0;
 }
 .gitRepos .gitReposItem .gitReposItemDesc {
   color: #586069;
   font-size: 12px;
   line-height: 18px;
-  max-height: 54px;
+  max-height: 36px;
   overflow: hidden;
   word-break: break-all;
 }
@@ -493,4 +152,254 @@ body .main .head > nav .nav-container .nav-item.nav-active::before {
   white-space: nowrap;
   font-size: 12px;
   color: #586069;
+}
+.gitRepos .gitReposItem:hover {
+  background: #f9f9f9;
+}
+.about .about-title {
+  height: 48px;
+  line-height: 48px;
+  padding: 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+.about .about-content {
+  padding: 10px;
+  padding-right: 0;
+  font-size: 12px;
+  color: #666;
+}
+.about .about-content div {
+  word-break: break-all;
+  margin-bottom: 10px;
+  line-height: 20px;
+}
+.about .about-content div i {
+  display: inline-block;
+  height: 20px;
+  width: 12px;
+  vertical-align: top;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 10px;
+}
+.about .about-content div .icon-tmall {
+  background-image: url('//img.alicdn.com/tfs/TB1XlF3RpXXXXc6XXXXXXXXXXXX-16-16.png');
+  background-size: 8px;
+}
+.about .about-content div .icon-hangzhou {
+  background-image: url('//gw.alicdn.com/tfs/TB1rG8gjLDH8KJjy1XcXXcpdXXa-16-16.png');
+}
+.about .about-content div .icon-js {
+  background-image: url('//gw.alicdn.com/tfs/TB1nVyDhiqAXuNjy1XdXXaYcVXa-32-32.png');
+}
+.about .about-content div .icon-go {
+  background-image: url('//gw.alicdn.com/tfs/TB1nB9DhiqAXuNjy1XdXXaYcVXa-116-130.png');
+}
+.blog .blog-title {
+  position: relative;
+  height: 48px;
+  line-height: 48px;
+  padding: 0 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+.blog .blog-title .blog-sort {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 48px;
+  line-height: 48px;
+  vertical-align: top;
+  font-weight: normal;
+  font-size: 12px;
+}
+.blog .blog-title .blog-sort span {
+  display: inline-block;
+  margin-left: 8px;
+  color: #999;
+  cursor: pointer;
+}
+.blog .blog-title .blog-sort span.blog-type-active {
+  color: #39f;
+  cursor: default;
+}
+.blog .blog-main {
+  position: relative;
+  min-height: 510px;
+}
+.blog .blog-main .blog-item {
+  position: relative;
+  display: inline-block;
+  width: 204px;
+  margin-right: 15px;
+  box-sizing: border-box;
+  height: 240px;
+  border-radius: 5px;
+  box-shadow: 0 0 5px #eee;
+  margin-bottom: 15px;
+  vertical-align: top;
+  padding-top: 12px;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+.blog .blog-main .blog-item:nth-child(5n) {
+  margin-right: 0;
+}
+.blog .blog-main .blog-item.blog-item-haveImg .blog-item-title {
+  color: #fff;
+  text-shadow: 0 0 3px #333;
+}
+.blog .blog-main .blog-item.blog-item-haveImg .blog-item-time {
+  color: #fff;
+  text-shadow: 0 0 3px #333;
+}
+.blog .blog-main .blog-item.blog-item-haveImg .blog-tags {
+  color: #fff;
+  text-shadow: 0 0 3px #333;
+}
+.blog .blog-main .blog-item .blog-item-title {
+  position: relative;
+  text-align: left;
+  height: 48px;
+  overflow: hidden;
+  padding: 0 12px;
+  line-height: 24px;
+  font-size: 18px;
+  color: #333;
+  font-weight: bold;
+  z-index: 3;
+  word-break: break-all;
+}
+.blog .blog-main .blog-item .blog-summary {
+  position: relative;
+  font-size: 12px;
+  padding: 0 12px;
+  margin-top: 12px;
+  line-height: 20px;
+  height: 100px;
+  overflow: hidden;
+  color: #586069;
+  z-index: 3;
+  word-break: break-all;
+}
+.blog .blog-main .blog-item .blog-tags {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  line-height: 18px;
+  font-size: 12px;
+  color: #79f;
+}
+.blog .blog-main .blog-item .blog-item-time {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  line-height: 18px;
+  font-size: 12px;
+  color: #586069;
+}
+.blog .blog-main .blog-item .blog-mylikesentence {
+  padding: 40px 20px;
+  line-height: 24px;
+  font-weight: bold;
+  text-align: center;
+}
+.blog .blog-main .blog-item .blog-toblog {
+  position: absolute;
+  bottom: 40px;
+  height: 30px;
+  text-align: center;
+  width: 100px;
+  font-size: 13px;
+  border-radius: 15px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  text-decoration: none;
+  color: #fff;
+  background: #79f;
+  line-height: 30px;
+}
+.er {
+  position: relative;
+  width: 100%;
+  height: 20px;
+}
+.er .eritem {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  text-align: center;
+  height: 18px;
+  line-height: 18px;
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity .3s ease;
+}
+.er .eritem.erItemActive {
+  opacity: 1;
+}
+.home .home-container {
+  position: relative;
+  height: 480px;
+  min-width: 1080px;
+  width: 100%;
+  background: #fff url('//gw.alicdn.com/tfs/TB13VVig5qAXuNjy1XdXXaYcVXa-3500-2625.jpg_960x960Q100s80.jpg_.webp') center 50px / contain no-repeat;
+  border-bottom: 1px solid #f5f5f5;
+}
+.home .home-container .home-logo {
+  position: absolute;
+  top: 60px;
+  width: 100%;
+  height: 40px;
+  background: url('https://gw.alicdn.com/tfs/TB1xmn4jfDH8KJjy1XcXXcpdXXa-568-107.png') center / contain no-repeat;
+}
+.home .home-container .home-text {
+  position: absolute;
+  top: 150px;
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+  line-height: 20px;
+}
+.home .home-container .home-text .home-iam {
+  display: inline-block;
+  position: relative;
+  height: 20px;
+  vertical-align: top;
+  width: 100px;
+  border-radius: 3px;
+  box-sizing: border-box;
+  line-height: 18px;
+  border: 1px solid #eee;
+}
+.home .container {
+  position: relative;
+  width: 1080px;
+  margin: 0 auto;
+  text-align: left;
+}
+.home .container .git-container {
+  margin-left: 0;
+  width: 864px;
+  height: 292px;
+}
+.home .container .about-container {
+  position: absolute;
+  top: 0;
+  height: 292px;
+  width: 200px;
+  right: 0;
+}
+.home .container .blog-container {
+  position: relative;
+  margin-left: 0;
 }
