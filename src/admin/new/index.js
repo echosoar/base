@@ -22,7 +22,11 @@ class New extends Component {
       link: this.ramdomLink()
     };
 
-    this.getData();
+    this.getData().then(() => {
+      if (!document.getElementById('new-info-link').value) {
+        document.getElementById('new-info-link').value = this.ramdomLink();
+      }
+    });
   }
 
 
@@ -126,6 +130,7 @@ class New extends Component {
     let summary = document.getElementById('new-info-summary').value;
     let link = document.getElementById('new-info-link').value;
     let id = window.iamgy.id || 0;
+    let img = document.getElementById('new-info-img').value;
 
     
 
@@ -136,7 +141,8 @@ class New extends Component {
       link,
       status,
       data: JSON.stringify(data),
-      id
+      id,
+      img
     };
 
     if (!id) {
@@ -156,26 +162,24 @@ class New extends Component {
   }
 
   getData() {
-    if (!window.iamgy.id) return;
+    if (!window.iamgy.id) return Promise.resolve(true);
 
-    
-
-    Fetch('//iam.gy/api/post/' + window.iamgy.id + '/?admin=1', {
+    return Fetch('//iam.gy/api/post/' + window.iamgy.id + '/?admin=1', {
       credentials: 'include'
     }).then(res => {
-      console.log(res);
-
       if (!res.success) return;
 
       let data = [];
 
       try {
-        data = JSON.parse(res.data.content);
         document.getElementById('new-info-title').value = res.data.title;
         document.getElementById('new-info-tags').value = res.data.tags;
         document.getElementById('new-info-summary').value = res.data.summary;
         document.getElementById('new-info-link').value = res.data.link;
+        document.getElementById('new-info-img').value = res.data.img;
         document.getElementById('now-info-createTime').value = TimeFormat((new Date(res.data.createTime * 1000)) - 0, 'yy/MM/dd hh:mm:ss');
+        console.log(res.data.content);
+        data = JSON.parse(res.data.content);
       } catch(e) {}
 
       this.setState({
@@ -207,7 +211,10 @@ class New extends Component {
           <input type="text" id="new-info-summary" />
         </div>
         <div class="editor-label" data-label="Link">
-          <input type="text" id="new-info-link" value={link} />
+          <input type="text" id="new-info-link" />
+        </div>
+        <div class="editor-label" data-label="CoverImg">
+          <input type="text" id="new-info-img" placeholder="No http:/https:"/>
         </div>
         <div class="editor-label" data-label="CreateTime">
           <input type="text"  id="now-info-createTime" disabled />

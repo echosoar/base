@@ -2,6 +2,10 @@
 'use strict';
 
 /** Virtual DOM Node */
+/** Global options
+ *	@public
+ *	@namespace options {Object}
+ */
 var options = {
 
 	/** If `true`, `prop` changes trigger synchronous component updates.
@@ -26,6 +30,13 @@ var options = {
 	// beforeUnmount(component) { }
 };
 
+/**
+ *  Copy all properties from `props` onto `obj`.
+ *  @param {Object} obj		Object onto which properties should be copied.
+ *  @param {Object} props	Object from which to copy properties.
+ *  @returns obj
+ *  @private
+ */
 function extend(obj, props) {
   for (var i in props) {
     obj[i] = props[i];
@@ -41,12 +52,7 @@ function extend(obj, props) {
  */
 var defer = typeof Promise == 'function' ? Promise.resolve().then.bind(Promise.resolve()) : setTimeout;
 
-/**
- * Clones the given VNode, optionally adding attributes/props and replacing its children.
- * @param {VNode} vnode		The virutal DOM element to clone
- * @param {Object} props	Attributes/props to add when cloning
- * @param {VNode} rest		Any additional arguments will be used as replacement children.
- */
+// DOM properties that should NOT have "px" added when numeric
 var IS_NON_DIMENSIONAL = /acit|ex(?:s|g|n|p|$)|rph|ows|mnc|ntw|ine[ch]|zoo|^ord/i;
 
 /** Managed queue of dirty components to be re-rendered */
@@ -895,10 +901,9 @@ function render(vnode, parent, merge) {
   return diff(merge, vnode, {}, false, parent, false);
 }
 
-
-//# sourceMappingURL=preact.esm.js.map
-
 'use strict';
+// 传入class，在path匹配上的时候使用此class
+
 var Router = (function (Component$$1) {
   function Router () {
     Component$$1.apply(this, arguments);
@@ -911,9 +916,14 @@ var Router = (function (Component$$1) {
   Router.prototype.render = function render$$1 () {
     return preact.h( 'div', null,
       this.props.children && this.props.children.map(function (child) {
-          console.log(child.attributes, window.iamgy);
           if (!window.iamgy) { return child; }
+          console.log(child.attributes);
+          if (window.iamgy.path && child.attributes.notPath != null && window.iamgy.path != child.attributes.notPath) {
+            return child;
+          }
+
           if (window.iamgy.path && child.attributes.path != null && window.iamgy.path != child.attributes.path) { return null; }
+
           if (window.iamgy.page && child.attributes.page != null && window.iamgy.page != child.attributes.page) { return null; }
           return child;
         })
@@ -935,9 +945,18 @@ var Base = (function (Component$$1) {
 
   Base.prototype.render = function render$$1 () {
     return preact.h( 'div', { class: "main" },
+      preact.h( Router, null,
+        preact.h( 'div', { notPath: "home", path: "notpath", class: "header" },
+          preact.h( 'div', { class: "header-main" },
+            preact.h( 'div', { class: "header-logo" }),
+            preact.h( 'div', { class: "header-nav" },
+              preact.h( 'a', { href: "//iam.gy/" }, "Home"), " / ", preact.h( 'a', { href: "//iam.gy/posts/" }, "All Posts"), " / ", preact.h( 'a', { href: "//github.com/echosoar", target: "_blank" }, "Github")
+            )
+          )
+        )
+      ),
       preact.h( 'div', null, this.props.children ),
-      preact.h( 'div', { class: "copyright" }, "© 2018 IAM.GY 浙公网安备33010602900497, 浙ICP备171200123号-1")
-      
+      preact.h( 'div', { class: "copyright" }, "© 2018 IAM.GY")
     )
   };
 
@@ -1106,12 +1125,12 @@ var formatDate =  function(date, fmt) {
 'use strict';
 var SortBy = [
   {
-    name: 'Time',
-    value: 'time'
+    name: 'Add',
+    value: 'createTime'
   },
   {
-    name: 'Word',
-    value: 'word'
+    name: 'Update',
+    value: 'changeTime'
   },
   {
     name: 'Read',
@@ -1131,6 +1150,8 @@ var Blog = (function (Component$$1) {
   if ( Component$$1 ) Blog.__proto__ = Component$$1;
   Blog.prototype = Object.create( Component$$1 && Component$$1.prototype );
   Blog.prototype.constructor = Blog;
+
+
 
   Blog.prototype.handleChangeType = function handleChangeType (type) {
     var this$1 = this;
@@ -1156,66 +1177,16 @@ var Blog = (function (Component$$1) {
   Blog.prototype.loadData = function loadData (type) {
     var this$1 = this;
 
-    setTimeout(function (){
-      this$1.setState(( obj = {}, obj[type] = [
-          {
-            title: '10 Things I Hate About Social Issues Journalism',
-            img: "//cdn-images-1.medium.com/max/2000/1*NyQPW2AYiu84R8rjiJBLVw.jpeg",
-            summary: "",
-            time: 1512013860020,
-            tags: ['Test', 'TagsA'],
-            link: 'sadsafasffa'
-          },
-          {
-            title: 'White people, we’re tired of trying to convince you of our humanity',
-            summary: "Yesterday a group of WOC and I spent several hours online working with a white woman who couldn’t understand her comments that minimized racism and discounted the struggles of black women were harmful. An ally I work with spent several more hours working with her one-on-one. The result? She barely budged in her way of thinking.",
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: 'Alphabet’s Schmidt Hands Reins to Google Founders, Leaders',
-            summary: "Google parent Alphabet Inc. no longer needs Eric Schmidt’s adult supervision.After 17 years in senior management, Schmidt is relinquishing his executive chairman role. He was recruited from Novell Inc. when Google had just 200 employees; now it’s a dominant global force in search, online advertising and…",
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },{
-            title: 'Prove everyone wrong',
-            summary: "",
-            img: '//cdn-images-1.medium.com/max/1600/1*xk9ZcxhJvELFfc50da722w.jpeg',
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: 'White people, we’re tired of trying to convince you of our humanity',
-            summary: "Yesterday a group of WOC and I spent several hours online working with a white woman who couldn’t understand her comments that minimized racism and discounted the struggles of black women were harmful. An ally I work with spent several more hours working with her one-on-one. The result? She barely budged in her way of thinking.",
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: 'A Cute Toy Just Brought a Hacker Into Your Home',
-            summary: "Amid the holiday shopping season, cybersecurity researchers warn that new, interactive toys are vulnerable to many hacking threats.",
-            time: 1514013860020,
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: '2017读了上百本书，唯独这7本彻底改变了我',
-            time: 1514013860020,
-            img: '//upload-images.jianshu.io/upload_images/2206395-5025633bfebeecec.jpeg?imageMogr2/auto-orient/',
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: '《红楼梦》与民国名著',
-            time: 1514013860020,
-            img: '//upload-images.jianshu.io/upload_images/5513287-60d6a2939be94bb0.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/700',
-            tags: ['Test', 'TagsB']
-          },
-          {
-            title: 'Why ‘The Dark Is Rising’ Is the Book We Need Right Now',
-            time: 1514013860020,
-            img: '//cdn-images-1.medium.com/max/2000/1*ocdu-Vzzw9C5UDaKrx1o7Q.jpeg',
-            tags: ['Test', 'TagsB']
-          }], obj));
+
+    var ref = this.state;
+    var page = ref.page;
+    fetch('//iam.gy/api/list/' + page + '/' + type + '?noContent=true', {
+      credentials: 'include'
+    }).then(function (res) {
+      this$1.setState(( obj = {}, obj[type] = res.data, obj));
       var obj;
-    }, 1000);
+    });
+  
   };
 
   Blog.prototype.render = function render$$1 () {
@@ -1232,7 +1203,7 @@ var Blog = (function (Component$$1) {
         )
       ),
       preact.h( 'div', { class: "blog-main" },
-        this.state[nowType] && this.state[nowType].map(function (post) {
+        this.state[nowType] && this.state[nowType].slice(0, 9).map(function (post) {
 
             var className = 'blog-item';
             var style = {};
@@ -1243,12 +1214,12 @@ var Blog = (function (Component$$1) {
             }
 
             return preact.h( 'div', { class: className, style: style },
-              preact.h( 'a', { href: '//iam.gy/post/' + post.link, target: "_blank" },
+              preact.h( 'a', { href: '//iam.gy/p/' + post.link, target: "_blank" },
                 preact.h( 'div', { class: "blog-item-title" }, post.title),
                 !post.img && preact.h( 'div', { class: "blog-summary" },
                     post.summary
                   ),
-                post.tags && preact.h( 'div', { class: "blog-tags" }, "#", post.tags.slice(0, 2).join(' #')),
+                post.tags && preact.h( 'div', { class: "blog-tags" }, "#", post.tags.split(',').slice(0, 2).join(' #')),
                 preact.h( 'div', { class: "blog-item-time" }, formatDate(post.time, 'yy/MM/dd'))
               )
             );
@@ -1356,6 +1327,183 @@ var Home = (function (Component$$1) {
   return Home;
 }(Component));
 
+var TAGS = {
+	'' : ['<em>','</em>'],
+	_ : ['<strong>','</strong>'],
+	'\n' : ['<br />'],
+	' ' : ['<br />'],
+	'-': ['<hr />']
+};
+
+/** Outdent a string based on the first indented line's leading whitespace
+ *	@private
+ */
+function outdent(str) {
+	return str.replace(RegExp('^'+(str.match(/^(\t| )+/) || '')[0], 'gm'), '');
+}
+
+/** Encode special attribute characters to HTML entities in a String.
+ *	@private
+ */
+function encodeAttr(str) {
+	return (str+'').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+/** Parse Markdown into an HTML String. */
+function parse(md) {
+	var tokenizer = /((?:^|\n+)(?:\n---+|\* \*(?: \*)+)\n)|(?:^```(\w*)\n([\s\S]*?)\n```$)|((?:(?:^|\n+)(?:\t|  {2,}).+)+\n*)|((?:(?:^|\n)([>*+-]|\d+\.)\s+.*)+)|(?:\!\[([^\]]*?)\]\(([^\)]+?)\))|(\[)|(\](?:\(([^\)]+?)\))?)|(?:(?:^|\n+)([^\s].*)\n(\-{3,}|={3,})(?:\n+|$))|(?:(?:^|\n+)(#{1,3})\s*(.+)(?:\n+|$))|(?:`([^`].*?)`)|(  \n\n*|\n{2,}|__|\*\*|[_*])/gm,
+		context = [],
+		out = '',
+		last = 0,
+		links = {},
+		chunk, prev, token, inner, t;
+
+	function tag(token) {
+		var desc = TAGS[token.replace(/\*/g,'_')[1] || ''],
+			end = context[context.length-1]==token;
+		if (!desc) { return token; }
+		if (!desc[1]) { return desc[0]; }
+		context[end?'pop':'push'](token);
+		return desc[end|0];
+	}
+
+	function flush() {
+		var str = '';
+		while (context.length) { str += tag(context[context.length-1]); }
+		return str;
+	}
+
+	md = md.replace(/^\[(.+?)\]:\s*(.+)$/gm, function (s, name, url) {
+		links[name.toLowerCase()] = url;
+		return '';
+	}).replace(/^\n+|\n+$/g, '');
+
+	while ( (token=tokenizer.exec(md)) ) {
+		prev = md.substring(last, token.index);
+		last = tokenizer.lastIndex;
+		chunk = token[0];
+		if (prev.match(/[^\\](\\\\)*\\$/)) {
+			// escaped
+		}
+		// Code/Indent blocks:
+		else if (token[3] || token[4]) {
+			chunk = '<pre class="code '+(token[4]?'poetry':token[2].toLowerCase())+'">'+outdent(encodeAttr(token[3] || token[4]).replace(/^\n+|\n+$/g, ''))+'</pre>';
+		}
+		// > Quotes, -* lists:
+		else if (token[6]) {
+			t = token[6];
+			if (t.match(/\./)) {
+				token[5] = token[5].replace(/^\d+/gm, '');
+			}
+			inner = parse(outdent(token[5].replace(/^\s*[>*+.-]/gm, '')));
+			if (t==='>') { t = 'blockquote'; }
+			else {
+				t = t.match(/\./) ? 'ol' : 'ul';
+				inner = inner.replace(/^(.*)(\n|$)/gm, '<li>$1</li>');
+			}
+			chunk = '<'+t+'>' + inner + '</'+t+'>';
+		}
+		// Images:
+		else if (token[8]) {
+			chunk = "<img src=\"" + (encodeAttr(token[8])) + "\" alt=\"" + (encodeAttr(token[7])) + "\">";
+		}
+		// Links:
+		else if (token[10]) {
+			out = out.replace('<a>', ("<a href=\"" + (encodeAttr(token[11] || links[prev.toLowerCase()])) + "\">"));
+			chunk = flush() + '</a>';
+		}
+		else if (token[9]) {
+			chunk = '<a>';
+		}
+		// Headings:
+		else if (token[12] || token[14]) {
+			t = 'h' + (token[14] ? token[14].length : (token[13][0]==='='?1:2));
+			chunk = '<'+t+'>' + parse(token[12] || token[15]) + '</'+t+'>';
+		}
+		// `code`:
+		else if (token[16]) {
+			chunk = '<code>'+encodeAttr(token[16])+'</code>';
+		}
+		// Inline formatting: *em*, **strong** & friends
+		else if (token[17] || token[1]) {
+			chunk = tag(token[17] || '--');
+		}
+		out += prev;
+		out += chunk;
+	}
+
+	return (out + md.substring(last) + flush()).trim();
+}
+
+'use strict';
+var TextRender = (function (Component$$1) {
+  function TextRender(props) {
+    Component$$1.call(this, props);
+
+    
+  }
+
+  if ( Component$$1 ) TextRender.__proto__ = Component$$1;
+  TextRender.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  TextRender.prototype.constructor = TextRender;
+
+  TextRender.prototype.render = function render$$1 () {
+    return preact.h( 'div', { class: "textrender", dangerouslySetInnerHTML: {__html: parse(this.props.data)} });
+  };
+
+  return TextRender;
+}(Component));
+
+'use strict';
+var Post = (function (Component$$1) {
+  function Post(props) {
+    Component$$1.call(this, props);
+
+    this.data = {
+      content: []
+    };
+    
+    try {
+      this.data = JSON.parse(document.getElementById('data').textContent);
+      this.data.content = JSON.parse(this.data.content);
+    } catch(e) {}
+  }
+
+  if ( Component$$1 ) Post.__proto__ = Component$$1;
+  Post.prototype = Object.create( Component$$1 && Component$$1.prototype );
+  Post.prototype.constructor = Post;
+  
+
+  Post.prototype.render_type = function render_type (item) {
+    switch(item.type) {
+      case 'text':
+        return preact.h( TextRender, { data: item.data });
+    }
+  };
+
+  Post.prototype.render = function render$$1 () {
+    var this$1 = this;
+
+    return preact.h( 'div', { class: "post" },
+      preact.h( 'div', { class: "post-main" },
+        preact.h( 'div', { class: "post-title" }, this.data.title),
+        preact.h( 'div', { class: "post-info" }, "Posted at ", formatDate(this.data.createTime * 1000, 'yy/MM/dd'), " | Tags ", this.data.tags.replace(/\s/g, '').split(',').map(function (tag) {
+            return preact.h( 'span', { class: "post-tag-item" }, tag);
+          })
+        ),
+        preact.h( 'div', { class: "post-content" }, this.data.content.map(function (item) {
+            return this$1.render_type(item);
+          })),
+        preact.h( 'div', { class: "post-more" }, "Latest edited at ", formatDate(this.data.changeTime * 1000, 'yy/MM/dd')
+        )
+      )
+
+    );
+  };
+
+  return Post;
+}(Component));
+
 'use strict';
 var IWenKu = (function (Component$$1) {
   function IWenKu () {
@@ -1369,7 +1517,8 @@ var IWenKu = (function (Component$$1) {
   IWenKu.prototype.render = function render$$1 () {
     return preact.h( Base, null,
       preact.h( Router, null,
-        preact.h( Home, { path: 'home' })
+        preact.h( Home, { path: 'home' }),
+        preact.h( Post, { path: 'p' })
       )
     )
   };

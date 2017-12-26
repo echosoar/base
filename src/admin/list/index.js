@@ -10,7 +10,8 @@ class List extends Component {
 
     this.state = {
       data: [],
-      page: window.iamgy.id || 1
+      page: window.iamgy.id || 1,
+      tol: 0
     };
 
     this.getLogin();
@@ -34,14 +35,42 @@ class List extends Component {
       credentials: 'include'
     }).then(res => {
       this.setState({
-        data: res.data
+        data: res.data,
+        tol: res.total
       });
     });
   }
 
+  handleChangePage(newPage) {
+    let { page } = this.state;
+
+    if (page == newPage) return;
+
+    this.state.page = newPage;
+    this.fetchData();
+  }
+
+  renderPagation() {
+    let { tol, page } = this.state;
+    if (!tol) return;
+    let pages = Math.ceil(tol/10);
+
+    return <div>
+      {
+        (new Array(pages + 1)).join('0').split('').map((_, index) => {
+          let className = 'list-page-item';
+          if (index + 1 == page) {
+            className += ' active';
+          }
+
+          return <div class={className} onClick={this.handleChangePage.bind(this, index + 1)}>{ index + 1 }</div>
+        })
+      }
+    </div>
+  }
   
   render() {
-    let { data } = this.state;
+    let { data, tol } = this.state;
     return <div class="list">
       <div class="list-main">
         <div class="list-header">
@@ -65,6 +94,9 @@ class List extends Component {
               </a>;
             })
           }
+        </div>
+        <div class="list-pagation">
+          { tol > 0 && this.renderPagation() }
         </div>
       </div>
     </div>;

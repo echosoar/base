@@ -8,9 +8,14 @@ class Router extends Component {
     return <div>
       {
         this.props.children && this.props.children.map(child => {
-          console.log(child.attributes, window.iamgy)
           if (!window.iamgy) return child;
+          console.log(child.attributes)
+          if (window.iamgy.path && child.attributes.notPath != null && window.iamgy.path != child.attributes.notPath) {
+            return child;
+          }
+
           if (window.iamgy.path && child.attributes.path != null && window.iamgy.path != child.attributes.path) return null;
+
           if (window.iamgy.page && child.attributes.page != null && window.iamgy.page != child.attributes.page) return null;
           return child;
         })

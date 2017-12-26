@@ -59,10 +59,50 @@ body {
     margin: 0 auto;
     min-width: @minWidth;
 
+    .header {
+      position: relative;
+      width: 100%;
+      background: #efefef;
+      min-width: @minWidth;
+      
+
+      .header-main {
+        position: relative;
+        width: @minWidth;
+        margin: 0 auto;
+        height: 40px;
+
+        .header-logo {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          width: 100px;
+          margin: 0 auto;
+          height: 20px;
+          background: url('https://gw.alicdn.com/tfs/TB1xmn4jfDH8KJjy1XcXXcpdXXa-568-107.png') right center/contain no-repeat;
+        }
+
+        .header-nav {
+          line-height: 40px;
+          font-size: 12px;
+          color: #999;
+          padding-left: 10px;
+          
+          a {
+            display: inline-block;
+            font-weight: bold;
+            color: #333;
+          }
+        }
+      }
+
+    }
+
     .copyright {
       line-height: 60px;
       text-align: center;
       font-size: 12px;
+      background: #efefef;
     }
   }
 }

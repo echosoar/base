@@ -911,9 +911,14 @@ var Router = (function (Component$$1) {
   Router.prototype.render = function render$$1 () {
     return preact.h( 'div', null,
       this.props.children && this.props.children.map(function (child) {
-          console.log(child.attributes, window.iamgy);
           if (!window.iamgy) { return child; }
+          console.log(child.attributes);
+          if (window.iamgy.path && child.attributes.notPath != null && window.iamgy.path != child.attributes.notPath) {
+            return child;
+          }
+
           if (window.iamgy.path && child.attributes.path != null && window.iamgy.path != child.attributes.path) { return null; }
+
           if (window.iamgy.page && child.attributes.page != null && window.iamgy.page != child.attributes.page) { return null; }
           return child;
         })
@@ -1190,6 +1195,8 @@ var TextEdit = (function (Component$$1) {
 'use strict';
 var New = (function (Component$$1) {
   function New(props) {
+    var this$1 = this;
+
     Component$$1.call(this, props);
 
     this.state = {
@@ -1200,7 +1207,11 @@ var New = (function (Component$$1) {
       link: this.ramdomLink()
     };
 
-    this.getData();
+    this.getData().then(function () {
+      if (!document.getElementById('new-info-link').value) {
+        document.getElementById('new-info-link').value = this$1.ramdomLink();
+      }
+    });
   }
 
   if ( Component$$1 ) New.__proto__ = Component$$1;
@@ -1311,6 +1322,7 @@ var New = (function (Component$$1) {
     var summary = document.getElementById('new-info-summary').value;
     var link = document.getElementById('new-info-link').value;
     var id = window.iamgy.id || 0;
+    var img = document.getElementById('new-info-img').value;
 
     
 
@@ -1321,13 +1333,14 @@ var New = (function (Component$$1) {
       link: link,
       status: status,
       data: JSON.stringify(data),
-      id: id
+      id: id,
+      img: img
     };
 
     if (!id) {
       var time = document.getElementById('new-info-time').value;
       if (time) {
-        postData.time = postData/1000;
+        postData.time = time;
       }
     }
 
@@ -1343,26 +1356,24 @@ var New = (function (Component$$1) {
   New.prototype.getData = function getData () {
     var this$1 = this;
 
-    if (!window.iamgy.id) { return; }
+    if (!window.iamgy.id) { return Promise.resolve(true); }
 
-    
-
-    fetch('//iam.gy/api/post/' + window.iamgy.id + '/?admin=1', {
+    return fetch('//iam.gy/api/post/' + window.iamgy.id + '/?admin=1', {
       credentials: 'include'
     }).then(function (res) {
-      console.log(res);
-
       if (!res.success) { return; }
 
       var data = [];
 
       try {
-        data = JSON.parse(res.data.content);
         document.getElementById('new-info-title').value = res.data.title;
         document.getElementById('new-info-tags').value = res.data.tags;
         document.getElementById('new-info-summary').value = res.data.summary;
         document.getElementById('new-info-link').value = res.data.link;
+        document.getElementById('new-info-img').value = res.data.img;
         document.getElementById('now-info-createTime').value = formatDate((new Date(res.data.createTime * 1000)) - 0, 'yy/MM/dd hh:mm:ss');
+        console.log(res.data.content);
+        data = JSON.parse(res.data.content);
       } catch(e) {}
 
       this$1.setState({
@@ -1377,7 +1388,6 @@ var New = (function (Component$$1) {
     var ref = this.state;
     var data = ref.data;
     var isOpenEdit = ref.isOpenEdit;
-    var link = ref.link;
     var flClass = 'new-fl';
     if (isOpenEdit) { flClass += ' active'; }
 
@@ -1396,7 +1406,10 @@ var New = (function (Component$$1) {
           preact.h( 'input', { type: "text", id: "new-info-summary" })
         ),
         preact.h( 'div', { class: "editor-label", 'data-label': "Link" },
-          preact.h( 'input', { type: "text", id: "new-info-link", value: link })
+          preact.h( 'input', { type: "text", id: "new-info-link" })
+        ),
+        preact.h( 'div', { class: "editor-label", 'data-label': "CoverImg" },
+          preact.h( 'input', { type: "text", id: "new-info-img", placeholder: "No http:/https:" })
         ),
         preact.h( 'div', { class: "editor-label", 'data-label': "CreateTime" },
           preact.h( 'input', { type: "text", id: "now-info-createTime", disabled: true }),
@@ -1465,7 +1478,8 @@ var List = (function (Component$$1) {
 
     this.state = {
       data: [],
-      page: window.iamgy.id || 1
+      page: window.iamgy.id || 1,
+      tol: 0
     };
 
     this.getLogin();
@@ -1498,15 +1512,47 @@ var List = (function (Component$$1) {
       credentials: 'include'
     }).then(function (res) {
       this$1.setState({
-        data: res.data
+        data: res.data,
+        tol: res.total
       });
     });
   };
 
+  List.prototype.handleChangePage = function handleChangePage (newPage) {
+    var ref = this.state;
+    var page = ref.page;
+
+    if (page == newPage) { return; }
+
+    this.state.page = newPage;
+    this.fetchData();
+  };
+
+  List.prototype.renderPagation = function renderPagation () {
+    var this$1 = this;
+
+    var ref = this.state;
+    var tol = ref.tol;
+    var page = ref.page;
+    if (!tol) { return; }
+    var pages = Math.ceil(tol/10);
+
+    return preact.h( 'div', null,
+      (new Array(pages + 1)).join('0').split('').map(function (_, index) {
+          var className = 'list-page-item';
+          if (index + 1 == page) {
+            className += ' active';
+          }
+
+          return preact.h( 'div', { class: className, onClick: this$1.handleChangePage.bind(this$1, index + 1) }, index + 1)
+        })
+    )
+  };
   
   List.prototype.render = function render$$1 () {
     var ref = this.state;
     var data = ref.data;
+    var tol = ref.tol;
     return preact.h( 'div', { class: "list" },
       preact.h( 'div', { class: "list-main" },
         preact.h( 'div', { class: "list-header" }, "IAM.GY ", preact.h( 'a', { class: "list-to-new", href: "//iam.gy/me/pnew/", target: "_blank" }, "New Post")
@@ -1523,6 +1569,9 @@ var List = (function (Component$$1) {
                 )
               );
             })
+        ),
+        preact.h( 'div', { class: "list-pagation" },
+          tol > 0 && this.renderPagation()
         )
       )
     );

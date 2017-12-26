@@ -7,9 +7,20 @@ class Base extends Component {
   
   render() {
     return <div class="main">
+      <Router>
+        <div notPath="home" path="notpath" class="header">
+          <div class="header-main">
+            <div class="header-logo"></div>
+            <div class="header-nav">
+              <a href="//iam.gy/">Home</a> / 
+              <a href="//iam.gy/posts/">All Posts</a> / 
+              <a href="//github.com/echosoar" target="_blank">Github</a>
+            </div>
+          </div>
+        </div>
+      </Router>
       <div>{ this.props.children }</div>
-      <div class="copyright">© 2018 IAM.GY 浙公网安备33010602900497, 浙ICP备171200123号-1</div>
-      
+      <div class="copyright">© 2018 IAM.GY</div>
     </div>
   }
 }
